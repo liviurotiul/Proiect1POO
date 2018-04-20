@@ -53,7 +53,7 @@ private:
 public:
 	friend ostream &operator << (ostream &output, const polinom &p);
 	friend istream &operator >> (istream &input, polinom &p);
-	polinom operator + (polinom pol1);
+	polinom operator + (polinom poll);
 	polinom operator - (polinom poll);
 	polinom operator * (polinom poll);
 	polinom operator / (polinom impartitor); // nu merge
@@ -98,12 +98,15 @@ polinom::~polinom(){
 }
 
 ostream &operator << (ostream &output, const polinom &p) {
-	output << p.coeficienti[0] << " +";
+	if (p.coeficienti[0] != 0){
+			if(p.coeficienti[1] > 0) output << p.coeficienti[0] << " +";
+			else output << p.coeficienti[0] << " ";
+		}
 	int i = 1;
 	for (i = 1; i < p.gradMaxim; i++) {
 		if (p.coeficienti[i] != 0){
 			if(p.coeficienti[i+1] > 0) output << p.coeficienti[i] << "x^" << i << " +";
-			else output << p.coeficienti[i] << "x^" << i << " -";
+			else output << p.coeficienti[i] << "x^" << i << " ";
 		}
 	}
     output << p.coeficienti[i] << "x^" << i;
@@ -118,22 +121,22 @@ istream &operator >> (istream &input, polinom &p) {
 	return input;
 }
 
-polinom polinom::operator + (polinom pol1) {
-	polinom newPol(gradMaxim + pol1.gradMaxim);
+polinom polinom::operator + (polinom poll) {
+	polinom newPol(gradMaxim + poll.gradMaxim);
 
 	int i = 0;
-	while (i <= pol1.gradMaxim && i <= gradMaxim){
-		newPol.coeficienti[i] = pol1.coeficienti[i] + coeficienti[i];
+	while (i <= poll.gradMaxim && i <= gradMaxim){
+		newPol.coeficienti[i] = poll.coeficienti[i] + coeficienti[i];
 		i++;
 	}
-	if (pol1.gradMaxim > gradMaxim) {
-		newPol.gradMaxim = pol1.gradMaxim;
-		while (i <= pol1.gradMaxim) {
-			newPol.coeficienti[i] = pol1.coeficienti[i];
+	if (poll.gradMaxim > gradMaxim) {
+		newPol.gradMaxim = poll.gradMaxim;
+		while (i <= poll.gradMaxim) {
+			newPol.coeficienti[i] = poll.coeficienti[i];
 			i++;
 		}
 	}
-	else {
+	if (poll.gradMaxim < gradMaxim) {
 		newPol.gradMaxim = gradMaxim;
 		while (i <= gradMaxim){
 			newPol.coeficienti[i] = coeficienti[i];
@@ -220,7 +223,7 @@ public:
 
 };
 
-bool pereche::operator!=(pereche p){
+bool pereche::operator != (pereche p){
     if(p.real != real)
         return 1;
     if(p.poll == poll)
@@ -297,8 +300,6 @@ int main()
             cout<<endl<<"your sum is: "<<p1 + p2;
             cout<<endl<<"press any key to continue...";
             system("PAUSE");
-            p1.~polinom();
-            p2.~polinom();
             system("CLS");
         }
 
@@ -413,6 +414,7 @@ int main()
             system("CLS");
         }
     }while(comanda);
+
     return 0;
 }
 
